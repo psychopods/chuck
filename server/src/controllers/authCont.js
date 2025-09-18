@@ -15,7 +15,7 @@ const register = async(req, res)=>{
         )
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        res.status(400).json({message:"Error Occured", error: err.message})
+        res.status(400).json({error: err.message})
     }
 }
 
