@@ -1,35 +1,113 @@
 const pool = require("../config/config")
 
+const deleteBooking = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const result = await pool.query(
+      `DELETE FROM bookings WHERE id = $1 AND user_id = $2 RETURNING *`,
+      [id, userId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Booking not found or not authorized." });
+    }
+    res.json({ message: "Booking deleted.", booking: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const deleteAllBookings = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await pool.query(
+      `DELETE FROM bookings WHERE user_id = $1 RETURNING *`,
+      [userId]
+    );
+    res.json({ message: `Deleted ${result.rows.length} bookings.`, deleted: result.rows });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// const createBooking = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const { service_id, booking_date, pax_count } = req.body;
+
+//     // find matching rate
+//     const rateResults = await pool.query(
+//       `SELECT price 
+//        FROM rates 
+//        WHERE service_id = $1 AND pax_min <= $2 AND pax_max >= $2
+//        LIMIT 1`,
+//       [service_id, pax_count]
+//     );
+
+//     let totalPrice;
+//     if (rateResults.rows.length > 0) {
+//       totalPrice = rateResults.rows[0].price;
+//     } else {
+//       // fallback: base price from services
+//       const serviceResult = await pool.query(
+//         `SELECT base_price FROM services WHERE id=$1`,
+//         [service_id]
+//       );
+//       if (serviceResult.rows.length === 0) {
+//         return res.status(404).json({ error: "Service Not Found." });
+//       }
+//       totalPrice = serviceResult.rows[0].base_price;
+//     }
+
+//     // insert booking
+//     const result = await pool.query(
+//       `INSERT INTO bookings (user_id, service_id, booking_date, pax_count, total_price)
+//        VALUES ($1, $2, $3, $4, $5)
+//        RETURNING *`,
+//       [userId, service_id, booking_date, pax_count, totalPrice]
+//     );
+
+//     res.status(201).json(result.rows[0]);
+//   } catch (err) {
+//     res.status(500).json({ success: false, message: "Booking Failed", error: err.message});
+//   }
+// };
+
 const createBooking = async (req, res) => {
   try {
     const userId = req.user.id;
     const { service_id, booking_date, pax_count } = req.body;
 
-    // find matching rate
-    const rateResults = await pool.query(
-      `SELECT price 
+    const rateResult = await pool.query(
+      `SELECT pax_min, pax_max, price 
        FROM rates 
-       WHERE service_id = $1 AND pax_min <= $2 AND pax_max >= $2
+       WHERE service_id=$1 
+       AND pax_min <= $2 AND pax_max >= $2
        LIMIT 1`,
       [service_id, pax_count]
     );
 
     let totalPrice;
-    if (rateResults.rows.length > 0) {
-      totalPrice = rateResults.rows[0].price;
+
+    if (rateResult.rows.length > 0) {
+      const rate = rateResult.rows[0];
+
+      if (rate.pax_max >= 999 || rate.pax_min >= 11) {
+        totalPrice = rate.price * pax_count;
+      } else {
+        totalPrice = rate.price;
+      }
     } else {
-      // fallback: base price from services
       const serviceResult = await pool.query(
-        `SELECT base_price FROM services WHERE id=$1`,
+        "SELECT base_price FROM services WHERE id=$1",
         [service_id]
       );
       if (serviceResult.rows.length === 0) {
-        return res.status(404).json({ error: "Service Not Found." });
+        return res.status(404).json({ error: "Service Not Found" });
       }
       totalPrice = serviceResult.rows[0].base_price;
     }
 
-    // insert booking
     const result = await pool.query(
       `INSERT INTO bookings (user_id, service_id, booking_date, pax_count, total_price)
        VALUES ($1, $2, $3, $4, $5)
@@ -39,10 +117,9 @@ const createBooking = async (req, res) => {
 
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    res.status(500).json({ success: false, message: "Booking Failed", error: err.message});
+    res.status(500).json({ error: err.message, message: "Booking Failed" });
   }
 };
-
 
 const getMyBookings = async (req, res) => {
   try {
@@ -83,4 +160,4 @@ const cancelBooking = async(req,res)=>{
     }
 }
 
-module.exports = {cancelBooking, createBooking, getMyBookings};
+module.exports = {cancelBooking, createBooking, getMyBookings, deleteBooking, deleteAllBookings};
