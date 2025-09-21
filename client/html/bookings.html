@@ -4,9 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Bookings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="../css/sidebar.css" />
   <link rel="stylesheet" href="../css/bookings.css" />
 </head>
 <body>
+  <div class="sidebar">
+    <ul class="nav-links">
+      <li><a href="./services.html"><i class="fa fa-box"></i><span>Services</span></a></li>
+      <li><a href="./bookings.html"><i class="fa fa-link" aria-hidden="true"></i><span>Bookings</span></a></li>
+    </ul>
+
+    <div class="user-tab">
+      <div class="user-icon" onclick="toggleUserMenu()">
+        <i class="fa fa-user-circle"></i><span>User</span>
+      </div>
+      <div id="userSubMenu" class="user-submenu">
+          <li><a href="./logout.html">Logout</a></li>
+      </div>
+    </div>
+  </div>
+  <div class="main-content">
+  <div id="sidebar-container"></div>
   <div class="container">
     <h1>My Bookings</h1>
 
@@ -21,7 +40,13 @@
 
     <div id="bookingsList" class="bookings-grid"></div>
   </div>
-
+  </div>
   <script src="../js/bookings.js"></script>
+      <script>
+    function toggleUserMenu() {
+      const submenu = document.getElementById('userSubMenu');
+      submenu.classList.toggle('show-submenu');
+    }
+  </script>
 </body>
 </html>
