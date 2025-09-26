@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Montserrat', Arial, sans-serif;
   background: url('../assets/beach2.jpg') no-repeat center center fixed;
   background-size: cover;
   display: flex;
@@ -14,7 +16,7 @@ body {
   --primary-color: #00f2ea;
   --secondary-color: #a855f7;
   --text-color: #e5e5e5;
-  --font-family: "Fira Code", Consolas, "Courier New", Courier, monospace;
+  --font-family: 'Montserrat', Arial, sans-serif;
   --glitch-anim-duration: 0.5s;
 }
 

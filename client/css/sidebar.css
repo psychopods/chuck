@@ -1,4 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
 /* Main content margin for sidebar */
+body {
+  font-family: 'Montserrat', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f7fa;
+  color: #333;
+}
+
 .main-content {
   margin-left: 4cm;
   transition: margin-left 0.3s;

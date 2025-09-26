@@ -100,30 +100,53 @@ function bookService(serviceId) {
     return;
   }
 
-  const booking_date = prompt("Enter booking date (YYYY-MM-DD):");
-  const pax_count = prompt("Enter number of people:");
+  // Show modal and set hidden service id input
+  document.getElementById('bookingServiceId').value = serviceId;
+  document.getElementById('bookingDate').value = '';
+  document.getElementById('paxCount').value = '';
+  document.getElementById('bookingModal').classList.remove('hidden');
+}
 
-  fetch('http://localhost:5219/api/bookings/createBooking', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token
-    },
-    body: JSON.stringify({ service_id: serviceId, booking_date, pax_count })
-  })
-  .then(res => res.json())
-  .then(data => {
+function closeBookingModal() {
+  document.getElementById('bookingModal').classList.add('hidden');
+}
+
+async function submitBooking(event) {
+  event.preventDefault(); // prevent form submit reload
+
+  const serviceId = document.getElementById('bookingServiceId').value;
+  const booking_date = document.getElementById('bookingDate').value;
+  const pax_count = document.getElementById('paxCount').value;
+  const token = sessionStorage.getItem('token');
+
+  if (!booking_date || !pax_count) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5219/api/bookings/createBooking', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ service_id: serviceId, booking_date, pax_count })
+    });
+    const data = await res.json();
+
     if (data.error || data.message === "Booking Failed") {
       alert("Failed to book: " + (data.error || "Unknown error"));
     } else {
       alert("Booking successful!");
-      closeModal();
+      closeBookingModal();
+      closeDetailsPanel(); // optional: close details panel after booking
     }
-  })
-  .catch(err => {
+  } catch (err) {
     alert("Error: " + err.message);
-  });
+  }
 }
+
 
 function applyFilters() {
   const selectedCategory = categoryFilter.value;
