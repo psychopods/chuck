@@ -1,8 +1,79 @@
+/* Universal box-sizing for layout consistency */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f7f7f7;
   color: #333;
+}
+.main-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.services-container {
+  flex: 2;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+.services-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.services-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.details-panel {
+  flex: 1;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  background: #fff;
+  border-left: 1px solid #ccc;
+  padding: 1rem;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+  max-width: 400px;
+  min-width: 300px;
+  height: fit-content;
+  z-index: 10;
+}
+
+.details-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.details-panel th, .details-panel td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+
+.details-panel.hidden {
+  display: none;
+}
+
+.close-details {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  float: right;
+  cursor: pointer;
 }
 
 .container {
@@ -18,26 +89,31 @@ h1 {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
 .service-card {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
   overflow: hidden;
+  text-align: center;
+  padding: 0.5rem;
   transition: transform 0.2s ease;
+  font-size: 0.85rem;
 }
 
 .service-card:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .service-image {
   width: 100%;
-  height: 180px;
+  max-width: 150px;
+  height: 150px;
   object-fit: cover;
+  margin: 0 auto 0.5rem;
 }
 
 .service-content {
@@ -45,16 +121,90 @@ h1 {
 }
 
 .service-content h3 {
-  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  margin: 0.5rem 0;
 }
 
 .service-content p {
-  font-size: 0.9rem;
-  margin: 0.25rem 0;
+  margin: 0.2rem 0;
+  font-size: 0.8rem;
 }
 
 .service-content .price {
   color: green;
   font-weight: bold;
-  margin-top: 0.5rem;
 }
+.service-content button {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
+  .services-container {
+    max-height: unset;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .details-panel {
+    position: relative;
+    top: auto;
+    max-width: 100%;
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #ccc;
+    padding: 0.7rem;
+  }
+
+  .service-card {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  .service-content {
+    padding: 0.7rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+@media (max-width: 1024px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .main-content {
+    padding: 0.2rem;
+  }
+  .service-card {
+    font-size: 1.08rem;
+    padding: 0.5rem;
+  }
+  .service-content {
+    padding: 0.5rem;
+  }
+  h1 {
+    font-size: 1.1rem;
+  }
+}
+
+

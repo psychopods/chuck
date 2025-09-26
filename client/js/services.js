@@ -59,10 +59,10 @@ async function showServiceDetails(id) {
     const service = await res.json();
 
     const rates = service.rates.map(rate => {
-      return `<li>${rate.pax_min}-${rate.pax_max} people: $${rate.price}</li>`;
+      return `<tr><td>${rate.pax_min}-${rate.pax_max}</td><td>$${rate.price}</td></tr>`;
     }).join('');
 
-    modalBody.innerHTML = `
+    document.getElementById('detailsBody').innerHTML = `
       <h2>${service.name}</h2>
       <img src="${service.image}" style="width: 100%; max-height: 200px; object-fit: cover;" />
       <p><strong>Category:</strong> ${service.category}</p>
@@ -70,15 +70,23 @@ async function showServiceDetails(id) {
       <p><strong>Base Price:</strong> $${service.base_price}</p>
       <p><strong>Capacity:</strong> ${service.capacity} people</p>
       <h4>Rates:</h4>
-      <ul>${rates}</ul>
+      <table>
+        <thead><tr><th>People</th><th>Price</th></tr></thead>
+        <tbody>${rates}</tbody>
+      </table>
       <button onclick="bookService(${service.id})">Book Now</button>
     `;
 
-    modal.classList.remove('hidden');
+    document.getElementById('detailsPanel').classList.remove('hidden');
   } catch (err) {
     alert("Failed to load service details: " + err.message);
   }
 }
+
+function closeDetailsPanel() {
+  document.getElementById('detailsPanel').classList.add('hidden');
+}
+
 
 
 function closeModal() {
