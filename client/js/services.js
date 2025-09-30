@@ -9,7 +9,13 @@ let allServices = [];
 async function fetchServices() {
   try {
     const res = await fetch(`${API_URL}/list.all.services`);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
     const services = await res.json();
+    if (!Array.isArray(services)) {
+      throw new Error(services.error || "Unexpected response from server");
+    }
     allServices = services;
 
     // Populate category filter
@@ -59,8 +65,15 @@ async function showServiceDetails(id) {
     const service = await res.json();
 
     const rates = service.rates.map(rate => {
-      return `<tr><td>${rate.pax_min}-${rate.pax_max}</td><td>$${rate.price}</td></tr>`;
+      return `
+        <tr>
+          <td>${rate.pax_min}-${rate.pax_max}</td>
+          <td>$${rate.price}</td>
+          <td>${rate.description || ''}</td>
+        </tr>
+      `;
     }).join('');
+    
 
     document.getElementById('detailsBody').innerHTML = `
       <h2>${service.name}</h2>
@@ -71,7 +84,7 @@ async function showServiceDetails(id) {
       <p><strong>Capacity:</strong> ${service.capacity} people</p>
       <h4>Rates:</h4>
       <table>
-        <thead><tr><th>People</th><th>Price</th></tr></thead>
+        <thead><tr><th>People</th><th>Price</th><th>Details</th></tr></thead>
         <tbody>${rates}</tbody>
       </table>
       <button onclick="bookService(${service.id})">Book Now</button>

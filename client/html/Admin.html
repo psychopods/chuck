@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../css/Admin.css" />
+</head>
+<body>
+  <header>
+    <h1>Admin Control Panel</h1>
+  </header>
+  <nav>
+    <button onclick="showSection('services')">Services</button>
+    <button onclick="showSection('rates')">Rates</button>
+    <button onclick="showSection('bookings')">Bookings</button>
+    <button onclick="showSection('users')">Users</button>
+  </nav>
+
+  <div class="container">
+
+    <!-- SERVICES SECTION -->
+    <section id="servicesSection">
+      <h2>Manage Services</h2>
+      <button onclick="loadServices()">Refresh Services</button>
+      <button onclick="showCreateServiceForm()">+ Create New Service</button>
+    
+      <!-- Create Service Form -->
+      <form id="createServiceForm" class="hidden" onsubmit="createService(event)">
+        <h3>Create Service</h3>
+        <input id="sName" type="text" placeholder="Name" required>
+        <input id="sDescription" type="text" placeholder="Description">
+        <input id="sCategory" type="text" placeholder="Category" required>
+        <input id="sBasePrice" type="number" placeholder="Base Price" required>
+        <input id="sImage" type="text" placeholder="Image URL">
+        <input id="sCapacity" type="number" placeholder="Capacity" required>
+        <button type="submit">Create</button>
+        <button type="button" onclick="hideCreateServiceForm()">Cancel</button>
+      </form>
+    
+      <!-- Update Service Form -->
+      <form id="updateServiceForm" class="hidden" onsubmit="updateServiceSubmit(event)">
+        <h3>Update Service</h3>
+        <input id="uId" type="hidden">
+        <input id="uName" type="text" placeholder="Name">
+        <input id="uDescription" type="text" placeholder="Description">
+        <input id="uCategory" type="text" placeholder="Category">
+        <input id="uBasePrice" type="number" placeholder="Base Price">
+        <input id="uImage" type="text" placeholder="Image URL">
+        <input id="uCapacity" type="number" placeholder="Capacity">
+        <button type="submit">Update</button>
+        <button type="button" onclick="hideUpdateServiceForm()">Cancel</button>
+      </form>
+    
+      <table id="servicesTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Category</th><th>Base Price</th><th>Capacity</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+
+    <!-- RATES SECTION -->
+    <section id="ratesSection" class="hidden">
+      <h2>Manage Rates</h2>
+      <input id="rateServiceId" type="number" placeholder="Service ID">
+      <button onclick="loadRates()">Load Rates</button>
+      <button onclick="showCreateRateForm()">+ Add Rate</button>
+    
+      <!-- Create Rate Form -->
+      <form id="createRateForm" class="hidden" onsubmit="createRate(event)">
+        <h3>Add Rate</h3>
+        <input id="rServiceId" type="number" placeholder="Service ID" required>
+        <input id="rPaxMin" type="number" placeholder="Pax Min" required>
+        <input id="rPaxMax" type="number" placeholder="Pax Max (use 999 for ∞)" required>
+        <input id="rPrice" type="number" placeholder="Price" required>
+        <input id="rDescription" type="text" placeholder="Description (optional)">
+        <button type="submit">Add Rate</button>
+        <button type="button" onclick="hideCreateRateForm()">Cancel</button>
+      </form>
+
+      <!-- Update Rate Form -->
+      <form id="updateRateForm" class="hidden" onsubmit="updateRateSubmit(event)">
+        <h3>Update Rate</h3>
+        <input id="urId" type="hidden">
+        <input id="urPaxMin" type="number" placeholder="Pax Min">
+        <input id="urPaxMax" type="number" placeholder="Pax Max">
+        <input id="urPrice" type="number" placeholder="Price">
+        <input id="urDescription" type="text" placeholder="Description">
+        <button type="submit">Update</button>
+        <button type="button" onclick="hideUpdateRateForm()">Cancel</button>
+      </form>
+
+    
+      <table id="ratesTable">
+        <thead>
+          <tr><th>ID</th><th>Pax Min</th><th>Pax Max</th><th>Price</th><th>Description</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+
+    <!-- BOOKINGS SECTION -->
+    <section id="bookingsSection" class="hidden">
+      <h2>Manage Bookings</h2>
+      <button onclick="loadBookings()">Refresh Bookings</button>
+      <table id="bookingsTable">
+        <thead><tr><th>ID</th><th>User</th><th>Service</th><th>Pax</th><th>Date</th><th>Status</th><th>Change</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- USERS SECTION -->
+    <section id="usersSection" class="hidden">
+      <h2>Manage Users</h2>
+      <p>(Comming Soon ... )</p>
+    </section>
+  </div>
+
+  <script src="../js/Admin.js"></script>
+</body>
+</html>
